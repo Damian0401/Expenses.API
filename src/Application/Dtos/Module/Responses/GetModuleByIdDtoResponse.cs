@@ -8,5 +8,7 @@ namespace Application.Dtos.Module.Responses
 {
     public class GetModuleByIdDtoResponse
     {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
     }
 }
