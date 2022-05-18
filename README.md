@@ -4,7 +4,7 @@
 * [General info](#general-info)
 * [Technologies](#technologies)
 
-### Generel info
+### General info
 WebAPI that helps you to manage your expenses
 
 ### Technologies
