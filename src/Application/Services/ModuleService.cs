@@ -49,7 +49,7 @@ namespace Application.Services
 
         }
 
-        public async Task<ServiceResponse<GetAllModulesDtoResponse>> GetAll()
+        public async Task<ServiceResponse<GetAllModulesDtoResponse>> GetAllAsync()
         {
             var modules = await Context.Modules.ToListAsync();
 
@@ -60,7 +60,7 @@ namespace Application.Services
             return new ServiceResponse<GetAllModulesDtoResponse>(HttpStatusCode.OK, response);
         }
 
-        public async Task<ServiceResponse<GetModuleByIdDtoResponse>> GetById(Guid id)
+        public async Task<ServiceResponse<GetModuleByIdDtoResponse>> GetByIdAsync(Guid id)
         {
             var module = await Context.Modules.FirstOrDefaultAsync(x => x.Id.Equals(id));
 

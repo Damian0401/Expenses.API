@@ -13,7 +13,7 @@ namespace Application.Interfaces
     {
         Task<ServiceResponse> CreateAsync(CreateModuleDtoRequest dto);
         Task<ServiceResponse> DeleteAsync(Guid id);
-        Task<ServiceResponse<GetModuleByIdDtoResponse>> GetById(Guid id);
-        Task<ServiceResponse<GetAllModulesDtoResponse>> GetAll();
+        Task<ServiceResponse<GetModuleByIdDtoResponse>> GetByIdAsync(Guid id);
+        Task<ServiceResponse<GetAllModulesDtoResponse>> GetAllAsync();
     }
 }

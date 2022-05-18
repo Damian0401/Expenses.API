@@ -21,7 +21,7 @@ namespace API.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetAll()
         {
-            var response = await _moduleService.GetAll();
+            var response = await _moduleService.GetAllAsync();
 
             return SendResponse(response);
         }
@@ -30,7 +30,7 @@ namespace API.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            var response = await _moduleService.GetById(id);
+            var response = await _moduleService.GetByIdAsync(id);
 
             return SendResponse(response);
         }
