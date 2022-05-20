@@ -22,7 +22,7 @@ namespace Application.Validators.Module
                 .NotEmpty()
                 .MaximumLength(255)
                 .MinimumLength(5)
-                .Must(n => !reservedModuleNames.Contains(n))
+                .Must(n => !context.Modules.Any(m => m.Name.Equals(n)))
                 .WithMessage("Module name have to be unique");
         }
     }

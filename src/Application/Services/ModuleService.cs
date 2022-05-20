@@ -62,7 +62,9 @@ namespace Application.Services
 
         public async Task<ServiceResponse<GetModuleByIdDtoResponse>> GetByIdAsync(Guid id)
         {
-            var module = await Context.Modules.FirstOrDefaultAsync(x => x.Id.Equals(id));
+            var module = await Context.Modules
+                .Include(x => x.Rooms)
+                .FirstOrDefaultAsync(x => x.Id.Equals(id));
 
             if (module is null)
             {

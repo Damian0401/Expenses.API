@@ -11,6 +11,7 @@ namespace Application.Infrastructure
         public AutoMapperProfile()
         {
             MapForUser();
+            MapsForRoom();
             MapsForModule();
         }
 
@@ -19,11 +20,16 @@ namespace Application.Infrastructure
             CreateMap<RegisterUserDtoRequest, ApplicationUser>();
         }
 
+        private void MapsForRoom()
+        {
+            CreateMap<Room, RoomForGetModuleByIdDtoResponse>();
+        }
+
         private void MapsForModule()
         {
             CreateMap<CreateModuleDtoRequest, Module>();
-            CreateMap<Module, GetModuleByIdDtoResponse>();
             CreateMap<Module, ModuleForGetAllModulesDtoResponse>();
+            CreateMap<Module, GetModuleByIdDtoResponse>();
         }
     }
 }
