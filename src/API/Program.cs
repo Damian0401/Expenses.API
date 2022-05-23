@@ -33,13 +33,16 @@ builder.Services.AddValidators();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 // Add cors
+var origins = configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
+var methods = configuration.GetSection("CorsSettings:AllowedMethods").Get<string[]>();
 builder.Services.AddCors(options => 
 {
     options.AddPolicy("CorsPolicy", opt =>
-        opt.AllowAnyMethod()
-            .AllowAnyHeader()
-            .WithOrigins(configuration["AllowedOrigins"]));
+        opt.AllowAnyHeader()
+            .WithMethods(methods)
+            .WithOrigins(origins));
 });
 
 // Configure database conntection
