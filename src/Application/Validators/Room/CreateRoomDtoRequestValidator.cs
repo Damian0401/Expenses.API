@@ -10,7 +10,9 @@ namespace Application.Validators.Room
         public CreateRoomDtoRequestValidator(DataContext context)
         {
             RuleFor(x => x.ModuleId)
-                .NotEmpty();
+                .NotEmpty()
+                .Must(x => context.Modules.Any(m => m.Id.Equals(x)))
+                .WithMessage("ModuleId have to match to any existing module");
 
             RuleFor(x => x.MaxResidentNumber)
                 .NotEmpty()

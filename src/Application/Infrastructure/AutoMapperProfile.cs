@@ -1,5 +1,7 @@
 using Application.Dtos.Module.Requests;
 using Application.Dtos.Module.Responses;
+using Application.Dtos.Room.Requests;
+using Application.Dtos.Room.Responses;
 using Application.Dtos.User.Requests;
 using AutoMapper;
 using Domain.Models.Entities;
@@ -22,6 +24,9 @@ namespace Application.Infrastructure
 
         private void MapsForRoom()
         {
+            CreateMap<CreateRoomDtoRequest, Room>();
+            CreateMap<Room, RoomForGetAllRoomsDtoResponse>();
+            CreateMap<Room, GetRoomByIdDtoResponse>();
             CreateMap<Room, RoomForGetModuleByIdDtoResponse>();
         }
 

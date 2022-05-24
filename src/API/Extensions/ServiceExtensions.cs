@@ -12,6 +12,7 @@ namespace Application.Extensions
         {
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IModuleService, ModuleService>();
+            services.AddScoped<IRoomService, RoomService>();
 
             return services;
         }

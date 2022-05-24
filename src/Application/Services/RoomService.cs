@@ -3,6 +3,7 @@ using Application.Dtos.Room.Responses;
 using Application.Interfaces;
 using Application.Services.Utilities;
 using Domain.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,19 +32,47 @@ namespace Application.Services
                 : new ServiceResponse(HttpStatusCode.BadRequest, "Unable to create room");
         }
 
-        public Task<ServiceResponse> DeleteAsync(Guid id)
+        public async Task<ServiceResponse> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var roomToDelete = await Context.Rooms
+                .FirstOrDefaultAsync(r => r.Id.Equals(id));
+
+            if (roomToDelete is null)
+            {
+                return new ServiceResponse(HttpStatusCode.NotFound);
+            }
+
+            Context.Rooms.Remove(roomToDelete);
+
+            await Context.SaveChangesAsync();
+
+            return new ServiceResponse(HttpStatusCode.OK);
         }
 
-        public Task<ServiceResponse<GetAllRoomsDtoResponse>> GetAllAsync()
+        public async Task<ServiceResponse<GetAllRoomsDtoResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var rooms = await Context.Rooms.ToListAsync();
+
+            var roomsDto = Mapper.Map<List<RoomForGetAllRoomsDtoResponse>>(rooms);
+
+            var response = new GetAllRoomsDtoResponse { Rooms = roomsDto };
+
+            return new ServiceResponse<GetAllRoomsDtoResponse>(HttpStatusCode.OK, response);
         }
 
-        public Task<ServiceResponse<GetRoomByIdDtoResponse>> GetByIdAsync(Guid id)
+        public async Task<ServiceResponse<GetRoomByIdDtoResponse>> GetByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var room = await Context.Rooms
+                .FirstOrDefaultAsync(r => r.Id.Equals(id));
+
+            if (room is null)
+            {
+                return new ServiceResponse<GetRoomByIdDtoResponse>(HttpStatusCode.NotFound);
+            }
+
+            var dto = Mapper.Map<GetRoomByIdDtoResponse>(room);
+
+            return new ServiceResponse<GetRoomByIdDtoResponse>(HttpStatusCode.OK, dto);
         }
     }
 }
