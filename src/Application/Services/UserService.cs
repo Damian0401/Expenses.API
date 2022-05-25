@@ -7,16 +7,38 @@ using Domain.Models;
 using Domain.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
-    public class AccountService : Service, IAccountService
+    public class UserService : Service, IUserService
     {
         private readonly IJwtGenerator _jwtGenerator;
 
-        public AccountService(IServiceProvider serviceProvider, IJwtGenerator jwtGenerator) : base(serviceProvider)
+        public UserService(IServiceProvider serviceProvider, IJwtGenerator jwtGenerator) : base(serviceProvider)
         {
             _jwtGenerator = jwtGenerator;
+        }
+
+        public async Task<ServiceResponse<GetAllUsersDtoResponse>> GetAllAsync()
+        {
+            var users = await Context.Users.ToListAsync();
+
+            var usersDto = new List<UserForGetAllUsersDtoResponse>();
+
+            foreach (var user in users)
+            {
+                var dto = Mapper.Map<UserForGetAllUsersDtoResponse>(user);
+
+                dto.Roles = await UserManager.GetRolesAsync(user);
+
+                usersDto.Add(dto);
+            }
+
+            var response = new GetAllUsersDtoResponse { Users = usersDto };
+
+            return new ServiceResponse<GetAllUsersDtoResponse>(HttpStatusCode.OK, response);
+
         }
 
         public async Task<ServiceResponse<LoginUserDtoResponse>> LoginAsync(LoginUserDtoRequest dto)

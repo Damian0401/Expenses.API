@@ -10,9 +10,10 @@ namespace Application.Extensions
     {
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IModuleService, ModuleService>();
             services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IBillService, BillService>();
 
             return services;
         }

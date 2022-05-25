@@ -2,7 +2,7 @@ namespace Domain.Models
 {
     public enum Status
     {
-        Paid,
+        Archived,
         Unpaid
     }
 }

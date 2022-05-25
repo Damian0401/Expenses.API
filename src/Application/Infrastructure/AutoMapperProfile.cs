@@ -1,8 +1,11 @@
+using Application.Dtos.Bill.Requests;
+using Application.Dtos.Bill.Responses;
 using Application.Dtos.Module.Requests;
 using Application.Dtos.Module.Responses;
 using Application.Dtos.Room.Requests;
 using Application.Dtos.Room.Responses;
 using Application.Dtos.User.Requests;
+using Application.Dtos.User.Responses;
 using AutoMapper;
 using Domain.Models.Entities;
 
@@ -15,11 +18,13 @@ namespace Application.Infrastructure
             MapForUser();
             MapsForRoom();
             MapsForModule();
+            MapsForBill();
         }
 
         private void MapForUser()
         {
             CreateMap<RegisterUserDtoRequest, ApplicationUser>();
+            CreateMap<ApplicationUser, UserForGetAllUsersDtoResponse>();
         }
 
         private void MapsForRoom()
@@ -35,6 +40,16 @@ namespace Application.Infrastructure
             CreateMap<CreateModuleDtoRequest, Module>();
             CreateMap<Module, ModuleForGetAllModulesDtoResponse>();
             CreateMap<Module, GetModuleByIdDtoResponse>();
+        }
+
+        private void MapsForBill()
+        {
+            CreateMap<Bill, BillForGetMyUnpaidBillsDtoResponse>();
+            CreateMap<Bill, BillForGetAllBillsDtoResponse>();
+            CreateMap<Bill, BillForGetMyArchivedBillsDtoResponse>();
+            CreateMap<Bill, BillForGetRoomUnpaidBillsDtoResponse>();
+            CreateMap<Bill, GetBillByIdDtoRespose>();
+            CreateMap<CreateBillDtoRequest, Bill>();
         }
     }
 }

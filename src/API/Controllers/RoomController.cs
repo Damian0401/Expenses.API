@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     public class RoomController : BaseController
     {
         private readonly IRoomService _roomService;

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Presistence;
 using Presistence.Seeds;
 using System.Globalization;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,10 +52,17 @@ builder.Services.AddDbContext<DataContext>(opt =>
     opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 });
 
+// Add middleware
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 // Add automapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
+// Add JsonEnum converter
+builder.Services.AddMvc(option => option.EnableEndpointRouting = false).AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 var app = builder.Build();
 
