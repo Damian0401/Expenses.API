@@ -13,7 +13,8 @@ namespace Application.Interfaces
     {
         Task<ServiceResponse> CreateAsync(CreateBillDtoRequest dto);
         Task<ServiceResponse<GetAllBillsDtoResponse>> GetAllAsync();
-        Task<ServiceResponse<GetRoomUnpaidBillsDtoResponse>> GetRoomUnpaidAsync(Guid roomId);
+        Task<ServiceResponse<GetRoomUnpaidBillsDtoResponse>> GetRoomUnpaidAsync();
+        Task<ServiceResponse<GetRoomArchivedBillsDtoResponse>> GetRoomArchivedAsync();
         Task<ServiceResponse<GetMyUnpaidBillsDtoResponse>> GetMyUnpaidAsync();
         Task<ServiceResponse<GetMyArchivedBillsDtoResponse>> GetMyArchivedAsync();
         Task<ServiceResponse<GetBillByIdDtoRespose>> GetByIdAsync(Guid id);

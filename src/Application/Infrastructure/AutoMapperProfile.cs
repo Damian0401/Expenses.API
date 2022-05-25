@@ -48,6 +48,7 @@ namespace Application.Infrastructure
             CreateMap<Bill, BillForGetAllBillsDtoResponse>();
             CreateMap<Bill, BillForGetMyArchivedBillsDtoResponse>();
             CreateMap<Bill, BillForGetRoomUnpaidBillsDtoResponse>();
+            CreateMap<Bill, BillForGetRoomArchivedBillsDtoResponse>();
             CreateMap<Bill, GetBillByIdDtoRespose>();
             CreateMap<CreateBillDtoRequest, Bill>();
         }

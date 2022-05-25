@@ -86,6 +86,12 @@ namespace Application.Services
             }
 
             var userToRegister = Mapper.Map<ApplicationUser>(dto);
+
+            if (userToRegister.RoomId is null && !dto.Role.Equals(Role.Administrator))
+            {
+                return new ServiceResponse<RegisterUserDtoResponse>(HttpStatusCode.BadRequest, "User must have assigned roomId");
+            }
+
             var createResult = await UserManager.CreateAsync(userToRegister, dto.Password);
 
             if (!createResult.Equals(IdentityResult.Success))

@@ -141,11 +141,33 @@ namespace Application.Services
             return new ServiceResponse<GetMyUnpaidBillsDtoResponse>(HttpStatusCode.OK, response);
         }
 
-        public async Task<ServiceResponse<GetRoomUnpaidBillsDtoResponse>> GetRoomUnpaidAsync(Guid roomId)
+        public async Task<ServiceResponse<GetRoomArchivedBillsDtoResponse>> GetRoomArchivedAsync()
         {
+            if (CurrentlyLoggedUser is null || CurrentlyLoggedUser.RoomId is null)
+            {
+                return new ServiceResponse<GetRoomArchivedBillsDtoResponse>(HttpStatusCode.BadRequest, "You need to have assigned roomId");
+            }
+
+            var archivedBills = await Context.Bills
+                .Where(b => b.OwnerId.Equals(CurrentlyLoggedUser.Id) && b.Status.Equals(Status.Archived))
+                .ToListAsync();
+
+            var archivedBillsDto = Mapper.Map<List<BillForGetRoomArchivedBillsDtoResponse>>(archivedBills);
+
+            var response = new GetRoomArchivedBillsDtoResponse { Bills = archivedBillsDto };
+
+            return new ServiceResponse<GetRoomArchivedBillsDtoResponse>(HttpStatusCode.OK, response);
+        }
+
+        public async Task<ServiceResponse<GetRoomUnpaidBillsDtoResponse>> GetRoomUnpaidAsync()
+        {
+            if (CurrentlyLoggedUser is null || CurrentlyLoggedUser.RoomId is null)
+            {
+                return new ServiceResponse<GetRoomUnpaidBillsDtoResponse>(HttpStatusCode.BadRequest, "You need to have assigned roomId");
+            }
+
             var unpaidBills = await Context.Bills
-                .Include(r => r.Owner)
-                .Where(r => r.Owner.RoomId != null && r.Owner.RoomId.Equals(roomId))
+                .Where(b => b.OwnerId.Equals(CurrentlyLoggedUser.Id) && b.Status.Equals(Status.Unpaid))
                 .ToListAsync();
 
             var unpaidBillsDto = Mapper.Map<List<BillForGetRoomUnpaidBillsDtoResponse>>(unpaidBills);

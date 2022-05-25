@@ -36,7 +36,7 @@ namespace API.Controllers
 
         [Authorize]
         [HttpGet("My/Unpaid")]
-        public async Task<IActionResult> GetUnpaid()
+        public async Task<IActionResult> GetMyUnpaid()
         {
             var response = await _billService.GetMyUnpaidAsync();
 
@@ -44,8 +44,8 @@ namespace API.Controllers
         }
 
         [Authorize]
-        [HttpGet("My/Archive")]
-        public async Task<IActionResult> GetArchived()
+        [HttpGet("My/Archived")]
+        public async Task<IActionResult> GetMyArchived()
         {
             var response = await _billService.GetMyArchivedAsync();
 
@@ -62,7 +62,25 @@ namespace API.Controllers
         }
 
         [Authorize]
-        [HttpPost("My/Archive")]
+        [HttpGet("Room/Unpaid")]
+        public async Task<IActionResult> GetRoomUnpaid()
+        {
+            var response = await _billService.GetRoomUnpaidAsync();
+
+            return SendResponse(response);
+        }
+
+        [Authorize]
+        [HttpGet("Room/Archived")]
+        public async Task<IActionResult> GetRoomArchive()
+        {
+            var response = await _billService.GetRoomArchivedAsync();
+
+            return SendResponse(response);
+        }
+
+        [Authorize]
+        [HttpPost("My/Archived")]
         public async Task<IActionResult> ArchiveAll()
         {
             var response = await _billService.ArchiveAllAsync();
@@ -71,7 +89,7 @@ namespace API.Controllers
         }
 
         [Authorize]
-        [HttpPost("My/Archive/{id:guid}")]
+        [HttpPost("My/Archived/{id:guid}")]
         public async Task<IActionResult> Archive([FromRoute] Guid id)
         {
             var response = await _billService.ArchiveByIdAsync(id);
