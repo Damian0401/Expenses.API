@@ -18,10 +18,19 @@ namespace API.Controllers
         }
 
         [Authorize(Roles = Role.Administrator)]
-        [HttpGet]
+        [HttpGet("")]
         public async Task<IActionResult> GetAll()
         {
             var response = await _userService.GetAllAsync();
+
+            return SendResponse(response);
+        }
+
+        [Authorize]
+        [HttpGet("Expenses")]
+        public async Task<IActionResult> GetExponses()
+        {
+            var response = await _userService.GetExpensesAsync();
 
             return SendResponse(response);
         }

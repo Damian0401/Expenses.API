@@ -41,6 +41,27 @@ namespace Application.Services
 
         }
 
+        public async Task<ServiceResponse<GetUserExpensesDtoResponse>> GetExpensesAsync()
+        {
+            if (CurrentlyLoggedUser is null)
+            {
+                return new ServiceResponse<GetUserExpensesDtoResponse>(HttpStatusCode.Unauthorized);
+            }
+
+            var userRoom = await Context.Rooms
+                .Include(r => r.Residents)
+                .FirstOrDefaultAsync(r => r.Id.Equals(CurrentlyLoggedUser.RoomId));
+
+            if (userRoom is null)
+            {
+                return new ServiceResponse<GetUserExpensesDtoResponse>(HttpStatusCode.BadRequest);
+            }
+
+            var response = await GetExponsesListAsync(userRoom);
+
+            return new ServiceResponse<GetUserExpensesDtoResponse>(HttpStatusCode.OK, response);
+        }
+
         public async Task<ServiceResponse<LoginUserDtoResponse>> LoginAsync(LoginUserDtoRequest dto)
         {
             if (CurrentlyLoggedUser is not null)
@@ -70,26 +91,20 @@ namespace Application.Services
 
         public async Task<ServiceResponse<RegisterUserDtoResponse>> RegisterAsync(RegisterUserDtoRequest dto)
         {
-            if (dto.Role.Equals(Role.Administrator))
+            var roleValidationStatus = await ValidateUserRoleAsync(dto);
+
+            if (roleValidationStatus != HttpStatusCode.OK)
             {
-                if (CurrentlyLoggedUser is null)
-                {
-                    return new ServiceResponse<RegisterUserDtoResponse>(HttpStatusCode.Unauthorized);
-                }
-
-                var isCurrentlyLoggedUserAdmin = await UserManager.IsInRoleAsync(CurrentlyLoggedUser, Role.Administrator);
-
-                if (!isCurrentlyLoggedUserAdmin)
-                {
-                    return new ServiceResponse<RegisterUserDtoResponse>(HttpStatusCode.Forbidden);
-                }
+                return new ServiceResponse<RegisterUserDtoResponse>(roleValidationStatus);
             }
 
             var userToRegister = Mapper.Map<ApplicationUser>(dto);
 
-            if (userToRegister.RoomId is null && !dto.Role.Equals(Role.Administrator))
+            var isRoomIdValid = await ValidateRoomIdAsync(dto);
+
+            if (isRoomIdValid == false)
             {
-                return new ServiceResponse<RegisterUserDtoResponse>(HttpStatusCode.BadRequest, "User must have assigned roomId");
+                return new ServiceResponse<RegisterUserDtoResponse>(HttpStatusCode.BadRequest, "Invalid roomId");
             }
 
             var createResult = await UserManager.CreateAsync(userToRegister, dto.Password);
@@ -106,6 +121,87 @@ namespace Application.Services
             var response = new RegisterUserDtoResponse { Token = token };
 
             return new ServiceResponse<RegisterUserDtoResponse>(HttpStatusCode.OK, response);
+        }
+
+        private async Task<HttpStatusCode> ValidateUserRoleAsync(RegisterUserDtoRequest user)
+        {
+            if (user.Role.Equals(Role.Administrator))
+            {
+                if (CurrentlyLoggedUser is null)
+                {
+                    return HttpStatusCode.Unauthorized;
+                }
+
+                var isCurrentlyLoggedUserAdmin = await UserManager.IsInRoleAsync(CurrentlyLoggedUser, Role.Administrator);
+
+                if (!isCurrentlyLoggedUserAdmin)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+            }
+
+            return HttpStatusCode.OK;
+        }
+
+        private async Task<bool> ValidateRoomIdAsync(RegisterUserDtoRequest user)
+        {
+            if (user.RoomId is null && !user.Role.Equals(Role.Administrator))
+            {
+                return false;
+            }
+
+            if (user.RoomId is not null)
+            {
+                var userRoom = await Context.Rooms
+                    .Include(r => r.Residents)
+                    .FirstOrDefaultAsync(r => r.Id.Equals(user.RoomId));
+
+                if (userRoom is null || userRoom.Residents.Count >= userRoom.MaxResidentNumber)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private async Task<GetUserExpensesDtoResponse> GetExponsesListAsync(Room userRoom)
+        {
+            var residentsId = userRoom.Residents
+                .Select(r => r.Id)
+                .Where(id => id != CurrentlyLoggedUser!.Id);
+
+            var billsToPay = await Context.Bills
+                .Where(b => residentsId.Contains(b.OwnerId) && b.Status.Equals(Status.Unpaid))
+                .ToListAsync();
+
+            var userExpenses = new List<ExpenseForGetUserExponsesDtoResponse>();
+
+            foreach (var resident in userRoom.Residents)
+            {
+                var residentBills = billsToPay.Where(b => b.OwnerId.Equals(resident.Id));
+
+                if (residentBills.Count() == 0)
+                {
+                    continue;
+                }
+
+                var expense = new ExpenseForGetUserExponsesDtoResponse
+                {
+                    OwnerName = $"{resident.FirstName} {resident.LastName}",
+                    Value = residentBills.Sum(b => b.Value) / (residentsId.Count() + 1)
+                };
+
+                userExpenses.Add(expense);
+            }
+
+            var response = new GetUserExpensesDtoResponse
+            {
+                TotalValue = userExpenses.Sum(x => x.Value),
+                Expenses = userExpenses
+            };
+
+            return response;
         }
     }
 }
