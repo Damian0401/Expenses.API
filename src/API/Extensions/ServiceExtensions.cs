@@ -1,8 +1,5 @@
 ﻿using Application.Interfaces;
 using Application.Services;
-using Infrastructure.Security;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Extensions
 {

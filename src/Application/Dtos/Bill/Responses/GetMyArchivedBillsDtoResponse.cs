@@ -1,11 +1,4 @@
-﻿using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Dtos.Bill.Responses
+﻿namespace Application.Dtos.Bill.Responses
 {
     public class GetMyArchivedBillsDtoResponse
     {

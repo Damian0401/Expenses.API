@@ -1,6 +1,5 @@
 using Application.Dtos.Room.Requests;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Presistence;
 
 namespace Application.Validators.Room

@@ -5,7 +5,6 @@ using Application.Interfaces;
 using Application.Services.Utilities;
 using Domain.Models;
 using Domain.Models.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,7 +1,5 @@
-using System.Net;
 using Application.Dtos.User.Requests;
 using Application.Interfaces;
-using Application.Services.Utilities;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

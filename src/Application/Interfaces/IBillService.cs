@@ -1,11 +1,6 @@
 ﻿using Application.Dtos.Bill.Requests;
 using Application.Dtos.Bill.Responses;
 using Application.Services.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {

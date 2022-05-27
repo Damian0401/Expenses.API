@@ -1,7 +1,6 @@
 using Application.Services.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Runtime.CompilerServices;
 
 namespace API.Controllers
 {
