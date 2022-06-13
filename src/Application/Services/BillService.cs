@@ -143,7 +143,12 @@ namespace Application.Services
 
         public async Task<ServiceResponse<GetRoomArchivedBillsDtoResponse>> GetRoomArchivedAsync()
         {
-            if (CurrentlyLoggedUser is null || CurrentlyLoggedUser.RoomId is null)
+            if (CurrentlyLoggedUser is null)
+            {
+                return new ServiceResponse<GetRoomArchivedBillsDtoResponse>(HttpStatusCode.Unauthorized);
+            }
+
+            if (CurrentlyLoggedUser.RoomId is null)
             {
                 return new ServiceResponse<GetRoomArchivedBillsDtoResponse>(HttpStatusCode.BadRequest, "You need to have assigned roomId");
             }
@@ -161,7 +166,12 @@ namespace Application.Services
 
         public async Task<ServiceResponse<GetRoomUnpaidBillsDtoResponse>> GetRoomUnpaidAsync()
         {
-            if (CurrentlyLoggedUser is null || CurrentlyLoggedUser.RoomId is null)
+            if (CurrentlyLoggedUser is null)
+            {
+                return new ServiceResponse<GetRoomUnpaidBillsDtoResponse>(HttpStatusCode.Unauthorized);
+            }
+
+            if (CurrentlyLoggedUser.RoomId is null)
             {
                 return new ServiceResponse<GetRoomUnpaidBillsDtoResponse>(HttpStatusCode.BadRequest, "You need to have assigned roomId");
             }
